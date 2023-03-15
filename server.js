@@ -5,7 +5,7 @@ const http = require('http')
 const server = http.createServer(app)
 const {Server} = require('socket.io');
 const io = new Server(server)
-
+const {formatMessage} = require('./utils/messages')
 
 
 
@@ -15,26 +15,27 @@ const PORT = 3009 || process.env.PORT
 
 app.use(express.static('public'))
 
+const botName = 'bando'
 
 //run when client connects
 
 io.on('connection', (socket) =>{
     
     //welcome current user
-    socket.emit('message', " welcome to chat app")
+    socket.emit('message',formatMessage(botName, " welcome to chat app"))
 
     // BroadCast when auser connets
-    socket.broadcast.emit('message','A user has joined the chat')
+    socket.broadcast.emit('message',formatMessage(botName,'A user has joined the chat'))
 
 
     //listen to event
     socket.on('chatMessage',(msg=>{
-        socket.emit('message',msg)
+        socket.emit('message',formatMessage('jojo',msg))
     }))
 
     //runs when client disconnects
     socket.on('disconnect',()=>{
-        io.emit('message', 'a user has left the chat')
+        io.emit('message',formatMessage(botName, 'a user has left the chat'))
     })
 })
 
