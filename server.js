@@ -10,7 +10,7 @@ const io = new Server(server)
 
 
 // set static folder
-const PORT = 3001 || process.env.PORT
+const PORT = 3009 || process.env.PORT
 
 
 app.use(express.static('public'))
@@ -26,6 +26,11 @@ io.on('connection', (socket) =>{
     // BroadCast when auser connets
     socket.broadcast.emit('message','A user has joined the chat')
 
+
+    //listen to event
+    socket.on('chatMessage',(msg=>{
+        socket.emit('message',msg)
+    }))
 
     //runs when client disconnects
     socket.on('disconnect',()=>{
